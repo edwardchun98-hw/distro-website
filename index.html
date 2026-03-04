@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distro — Email, built for deals.</title>
+<meta name="description" content="Distro automates deal document distribution for law firms and uses AI to catch errors before they happen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #0C0C0C;
+  --dark: #141414;
+  --cream: #F5F1EB;
+  --warm-white: #FAF8F5;
+  --warm-gray: #E8E4DE;
+  --text: #1A1A1A;
+  --text-secondary: #6B6560;
+  --text-tertiary: #9B958E;
+  --serif: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans); color: var(--text); background: var(--warm-white);
+  -webkit-font-smoothing: antialiased; line-height: 1.6; overflow-x: hidden;
+}
+::selection { background: rgba(26,26,26,0.12); }
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+
+/* NAV */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+nav.scrolled { background: rgba(250,248,245,0.9); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid var(--warm-gray); }
+nav.on-hero .nav-logo, nav.on-hero .nav-links a { color: rgba(255,255,255,0.85); }
+nav.on-hero .nav-links a:hover { color: #fff; }
+nav.on-hero .nav-cta { background: #fff; color: var(--black); }
+.nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 48px; height: 72px; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: var(--sans); font-weight: 600; font-size: 20px; letter-spacing: -0.03em; color: var(--black); transition: color 0.3s; }
+.nav-links { display: flex; align-items: center; gap: 36px; font-size: 14px; font-weight: 400; color: var(--text-secondary); }
+.nav-links a { transition: color 0.2s; } .nav-links a:hover { color: var(--text); }
+.nav-cta { font-size: 14px; font-weight: 500; padding: 10px 24px; background: var(--black); color: #fff; border-radius: 6px; transition: all 0.2s; }
+.nav-cta:hover { opacity: 0.85; }
+@media (max-width: 768px) { .nav-links { display: none; } .nav-inner { padding: 0 24px; } }
+
+/* HERO */
+.hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 48px 80px; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; z-index: 0; }
+.hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
+.hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(12,12,12,0.3) 0%, rgba(12,12,12,0.15) 40%, rgba(12,12,12,0.65) 75%, rgba(12,12,12,0.88) 100%), linear-gradient(to right, rgba(20,14,8,0.4) 0%, transparent 60%); }
+.hero-inner { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; width: 100%; color: #fff; }
+.hero h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(52px,8vw,100px); line-height: 1.0; letter-spacing: -0.03em; margin-bottom: 28px; max-width: 720px; }
+.hero h1 em { font-style: italic; }
+.hero-sub { font-size: 17px; line-height: 1.75; color: rgba(255,255,255,0.6); max-width: 480px; margin-bottom: 44px; font-weight: 300; }
+.hero-actions { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.btn-hero { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; font-size: 15px; font-weight: 500; border-radius: 6px; transition: all 0.25s; cursor: pointer; font-family: var(--sans); border: none; }
+.btn-hero-primary { background: #fff; color: var(--black); } .btn-hero-primary:hover { background: rgba(255,255,255,0.9); }
+.btn-hero-secondary { background: transparent; color: rgba(255,255,255,0.65); border: 1px solid rgba(255,255,255,0.18); } .btn-hero-secondary:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
+.hero-trust { margin-top: 56px; padding-top: 28px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.3); font-weight: 500; }
+@media (max-width: 768px) { .hero { padding: 0 24px 60px; } }
+
+/* SECTIONS */
+.section { padding: 120px 48px; }
+.section-cream { background: var(--cream); } .section-white { background: var(--warm-white); } .section-dark { background: var(--black); color: #fff; }
+.container { max-width: 1200px; margin: 0 auto; }
+.container-narrow { max-width: 780px; margin: 0 auto; }
+@media (max-width: 768px) { .section { padding: 80px 24px; } }
+.section-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); font-weight: 500; margin-bottom: 24px; }
+.section-dark .section-label { color: rgba(255,255,255,0.3); }
+.section-heading { font-family: var(--serif); font-weight: 400; font-size: clamp(36px,5vw,56px); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 20px; }
+.section-heading em { font-style: italic; } .section-dark .section-heading { color: #fff; }
+.section-desc { font-size: 17px; line-height: 1.7; color: var(--text-secondary); max-width: 520px; font-weight: 300; }
+.section-dark .section-desc { color: rgba(255,255,255,0.45); }
+
+/* PROBLEM */
+.problem-statement { font-family: var(--serif); font-size: clamp(26px,3.8vw,42px); line-height: 1.3; letter-spacing: -0.01em; max-width: 860px; font-weight: 400; }
+.problem-statement .muted { color: var(--text-tertiary); }
+.problem-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 1px; margin-top: 72px; background: var(--warm-gray); border: 1px solid var(--warm-gray); border-radius: 10px; overflow: hidden; }
+.problem-card { background: var(--warm-white); padding: 28px 22px; }
+.problem-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.problem-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.55; font-weight: 300; }
+@media (max-width: 1024px) { .problem-grid { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 600px) { .problem-grid { grid-template-columns: 1fr 1fr; } }
+
+/* HOW IT WORKS */
+.steps-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 56px; margin-top: 72px; }
+.step-num { font-family: var(--serif); font-size: 56px; color: rgba(255,255,255,0.08); line-height: 1; margin-bottom: 20px; }
+.step h3 { font-family: var(--serif); font-size: 23px; font-weight: 400; margin-bottom: 10px; letter-spacing: -0.01em; color: #fff; }
+.step p { font-size: 15px; line-height: 1.7; color: rgba(255,255,255,0.4); font-weight: 300; }
+@media (max-width: 768px) { .steps-grid { grid-template-columns: 1fr; gap: 44px; } }
+
+/* FEATURES — stat headline */
+.stat-headline {
+  display: flex; align-items: baseline; gap: 16px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+.stat-number {
+  font-family: var(--serif); font-size: clamp(64px,8vw,96px);
+  line-height: 1; letter-spacing: -0.03em; font-weight: 400;
+}
+.stat-unit {
+  font-family: var(--serif); font-size: clamp(28px,3vw,40px);
+  color: var(--text-secondary); font-weight: 400; line-height: 1.1;
+}
+.stat-unit em { font-style: italic; }
+.stat-context {
+  font-size: 16px; color: var(--text-secondary); font-weight: 300;
+  max-width: 480px; line-height: 1.6; margin-bottom: 0;
+}
+.features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; margin-top: 72px; background: var(--warm-gray); border: 1px solid var(--warm-gray); border-radius: 10px; overflow: hidden; }
+.feature-card { background: var(--cream); padding: 36px 28px; transition: background 0.3s; }
+.feature-card:hover { background: var(--warm-white); }
+.feature-card h3 { font-family: var(--serif); font-size: 21px; font-weight: 400; margin-bottom: 10px; letter-spacing: -0.01em; }
+.feature-card p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); font-weight: 300; }
+@media (max-width: 768px) { .features-grid { grid-template-columns: 1fr; } }
+
+/* PRODUCT PREVIEW — clickable cards */
+.preview-container { perspective: 1400px; margin-top: 72px; }
+.preview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; align-items: start; }
+.preview-card {
+  transform: rotateY(-4deg) rotateX(2deg);
+  transition: transform 0.6s cubic-bezier(0.23,1,0.32,1), box-shadow 0.6s ease;
+  border-radius: 10px; overflow: hidden; background: #fff;
+  border: 1px solid var(--warm-gray);
+  box-shadow: 0 20px 70px rgba(0,0,0,0.05), 0 6px 20px rgba(0,0,0,0.03);
+  cursor: pointer; position: relative;
+}
+.preview-card:hover {
+  transform: rotateY(0) rotateX(0) translateY(-6px);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.09), 0 10px 28px rgba(0,0,0,0.05);
+}
+.preview-card:nth-child(2) { margin-top: 36px; }
+.preview-card:nth-child(3) { margin-top: 72px; }
+.preview-card img { width: 100%; height: auto; }
+/* Zoom hint overlay */
+.preview-card .zoom-hint {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(12,12,12,0.0); transition: background 0.3s;
+  pointer-events: none;
+}
+.preview-card:hover .zoom-hint { background: rgba(12,12,12,0.25); }
+.zoom-hint span {
+  opacity: 0; transform: scale(0.9);
+  transition: opacity 0.3s, transform 0.3s;
+  background: rgba(255,255,255,0.95); color: var(--black);
+  font-size: 13px; font-weight: 500; padding: 8px 16px;
+  border-radius: 6px; pointer-events: none;
+}
+.preview-card:hover .zoom-hint span { opacity: 1; transform: scale(1); }
+.preview-caption { padding: 18px 22px; border-top: 1px solid var(--warm-gray); }
+.preview-caption h4 { font-family: var(--serif); font-size: 16px; font-weight: 400; margin-bottom: 3px; }
+.preview-caption p { font-size: 13px; color: var(--text-tertiary); font-weight: 300; }
+@media (max-width: 768px) {
+  .preview-grid { grid-template-columns: 1fr; }
+  .preview-card { transform: none; }
+  .preview-card:nth-child(2), .preview-card:nth-child(3) { margin-top: 20px; }
+  .preview-card:hover { transform: translateY(-4px); }
+}
+
+/* LIGHTBOX */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16,1,0.3,1);
+  cursor: zoom-out;
+}
+.lightbox.active { opacity: 1; pointer-events: auto; }
+.lightbox-inner {
+  position: relative; max-width: 92vw; max-height: 88vh;
+  transform: scale(0.92); transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.lightbox.active .lightbox-inner { transform: scale(1); }
+.lightbox-inner img {
+  max-width: 100%; max-height: 85vh; border-radius: 8px;
+  box-shadow: 0 40px 120px rgba(0,0,0,0.3);
+}
+.lightbox-caption {
+  text-align: center; margin-top: 16px;
+  font-family: var(--serif); font-size: 18px; color: rgba(255,255,255,0.7);
+}
+.lightbox-close {
+  position: absolute; top: -48px; right: 0;
+  background: none; border: none; color: rgba(255,255,255,0.5);
+  font-size: 28px; cursor: pointer; transition: color 0.2s;
+  font-family: var(--sans); font-weight: 300; padding: 8px;
+}
+.lightbox-close:hover { color: #fff; }
+/* Lightbox nav arrows */
+.lightbox-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7); border-radius: 50%;
+  width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; cursor: pointer; transition: all 0.2s;
+  font-family: var(--sans); font-weight: 300;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.2); color: #fff; }
+.lightbox-prev { left: -60px; }
+.lightbox-next { right: -60px; }
+@media (max-width: 768px) {
+  .lightbox-prev { left: 8px; }
+  .lightbox-next { right: 8px; }
+}
+
+/* SECURITY */
+.security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 56px; border-top: 1px solid var(--warm-gray); }
+.security-item { padding: 28px 0; border-bottom: 1px solid var(--warm-gray); }
+.security-item:nth-child(odd) { padding-right: 36px; border-right: 1px solid var(--warm-gray); }
+.security-item:nth-child(even) { padding-left: 36px; }
+.security-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+.security-item p { font-size: 14px; color: var(--text-secondary); font-weight: 300; line-height: 1.6; }
+@media (max-width: 600px) { .security-grid { grid-template-columns: 1fr; } .security-item:nth-child(odd) { padding-right: 0; border-right: none; } .security-item:nth-child(even) { padding-left: 0; } }
+
+/* FAQ */
+.faq-item { border-bottom: 1px solid var(--warm-gray); }
+.faq-q { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 26px 0; text-align: left; background: transparent; border: none; color: var(--text); font-size: 17px; font-weight: 400; font-family: var(--serif); cursor: pointer; transition: color 0.2s; }
+.faq-q:hover { color: var(--text-secondary); }
+.faq-icon { font-size: 18px; color: var(--text-tertiary); transition: transform 0.3s; flex-shrink: 0; font-family: var(--sans); font-weight: 300; }
+.faq-icon.open { transform: rotate(45deg); }
+.faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s; opacity: 0; }
+.faq-a.open { max-height: 200px; opacity: 1; }
+.faq-a p { padding-bottom: 26px; font-size: 15px; color: var(--text-secondary); line-height: 1.7; font-weight: 300; max-width: 600px; }
+
+/* FORM */
+.form-wrapper { max-width: 440px; margin: 44px auto 0; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+@media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+.form-input { width: 100%; padding: 13px 16px; border-radius: 6px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: #fff; font-size: 14px; font-family: var(--sans); transition: border-color 0.2s; outline: none; margin-bottom: 10px; }
+.form-input::placeholder { color: rgba(255,255,255,0.28); } .form-input:focus { border-color: rgba(255,255,255,0.3); }
+select.form-input { color: rgba(255,255,255,0.28); } select.form-input.filled { color: #fff; }
+select.form-input option { background: var(--dark); color: #fff; }
+.form-submit { width: 100%; padding: 13px; border-radius: 6px; background: #fff; color: var(--black); font-weight: 500; font-size: 15px; border: none; cursor: pointer; font-family: var(--sans); transition: opacity 0.2s; margin-bottom: 14px; }
+.form-submit:hover { opacity: 0.9; } .form-submit:disabled { opacity: 0.5; }
+.form-fallback { text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+.form-fallback a { color: rgba(255,255,255,0.55); } .form-fallback a:hover { color: #fff; }
+.success-box { padding: 44px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+.success-box h3 { font-family: var(--serif); font-size: 24px; color: #fff; margin-bottom: 8px; }
+.success-box p { color: rgba(255,255,255,0.4); font-size: 15px; font-weight: 300; }
+
+/* FOOTER */
+footer { padding: 36px 48px; border-top: 1px solid var(--warm-gray); background: var(--warm-white); }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.footer-inner p { font-size: 13px; color: var(--text-tertiary); }
+@media (max-width: 768px) { footer { padding: 36px 24px; } }
+
+/* ANIMATIONS */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1), transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.rd1 { transition-delay: 0.1s; } .rd2 { transition-delay: 0.2s; } .rd3 { transition-delay: 0.3s; }
+@keyframes heroIn { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+.ha { opacity: 0; animation: heroIn 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+.ha1 { animation-delay: 0.3s; } .ha2 { animation-delay: 0.5s; } .ha3 { animation-delay: 0.7s; } .ha4 { animation-delay: 0.9s; }
+@keyframes slowZoom { from { transform: scale(1.0); } to { transform: scale(1.06); } }
+.hero-bg img { animation: slowZoom 20s ease-out forwards; }
+
+/* Body no-scroll when lightbox open */
+body.lb-open { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav" class="on-hero">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Distro</a>
+    <div class="nav-links">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#security">Security</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#demo" class="nav-cta">Request a Demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <img src="hero-bg.webp" alt="" role="presentation" loading="eager">
+  </div>
+  <div class="hero-inner">
+    <h1 class="ha ha1">Email, built<br>for <em>deals.</em></h1>
+    <p class="hero-sub ha ha2">Distro automates deal document distribution for law firms. AI-powered recipient rules. Pre-send validation. Full audit trail.</p>
+    <div class="hero-actions ha ha3">
+      <a href="#demo" class="btn-hero btn-hero-primary">Request a Demo</a>
+      <a href="#how" class="btn-hero btn-hero-secondary">See how it works</a>
+    </div>
+    <p class="hero-trust ha ha4">Built for transactional teams</p>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section section-cream">
+  <div class="container reveal">
+    <p class="problem-statement">
+      Law firms run deals on email. Data rooms handle storage.
+      Closing tools handle post-deal. But during negotiation —
+      the highest-risk phase —
+      <span class="muted">there's nothing.</span>
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card"><h4>Wrong recipients</h4><p>Confidential documents sent to the wrong party.</p></div>
+      <div class="problem-card"><h4>Missed stakeholders</h4><p>Key people left off critical sends.</p></div>
+      <div class="problem-card"><h4>Chaotic CCs</h4><p>No system for TO vs CC vs BCC.</p></div>
+      <div class="problem-card"><h4>Version confusion</h4><p>Wrong drafts distributed to deal parties.</p></div>
+      <div class="problem-card"><h4>Last-minute sends</h4><p>Midnight closings with zero error checking.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-dark" id="how">
+  <div class="container">
+    <div class="reveal"><p class="section-label">How it works</p><h2 class="section-heading">Three steps to<br><em>zero mistakes.</em></h2></div>
+    <div class="steps-grid">
+      <div class="step reveal rd1"><div class="step-num">01</div><h3>Define deal roles</h3><p>Add parties, assign roles — buyer counsel, seller, banker — and map contacts to each side.</p></div>
+      <div class="step reveal rd2"><div class="step-num">02</div><h3>AI generates distribution rules</h3><p>Distro builds a TO/CC/BCC matrix for every document type — NDA, SPA, closing cert, and more.</p></div>
+      <div class="step reveal rd3"><div class="step-num">03</div><h3>Send with guardrails</h3><p>Send from Outlook with pre-send validation. Every email is logged with a complete audit trail.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES — stat-driven headline -->
+<section class="section section-cream" id="features">
+  <div class="container">
+    <div class="reveal">
+      <p class="section-label">Features</p>
+      <div class="stat-headline">
+        <span class="stat-number">700</span>
+        <span class="stat-unit">hours saved<br><em>per deal.</em></span>
+      </div>
+      <p class="stat-context">Distro replaces the manual email workflows that cost your team hundreds of hours on every transaction.</p>
+    </div>
+    <div class="features-grid reveal">
+      <div class="feature-card"><h3>AI Distribution Matrix</h3><p>TO, CC, and BCC assignments by document type — generated automatically from deal roles.</p></div>
+      <div class="feature-card"><h3>Smart Lists by Role</h3><p>Organize recipients by party and role. Add someone once, mapped across every relevant document type.</p></div>
+      <div class="feature-card"><h3>Pre-send Risk Checks</h3><p>Warnings before send: missing recipients, wrong parties, unauthorized contacts.</p></div>
+      <div class="feature-card"><h3>Activity Log & Audit Trail</h3><p>Complete record of what was sent, to whom, when, and by who. Searchable and exportable.</p></div>
+      <div class="feature-card"><h3>One-click Reuse</h3><p>Clone distribution templates across deals. Standardize your firm's workflows.</p></div>
+      <div class="feature-card"><h3>Outlook & Gmail</h3><p>Works inside your existing email client. No rip-and-replace. No new tools to learn.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT PREVIEW — clickable images -->
+<section class="section section-white">
+  <div class="container">
+    <div class="reveal" style="text-align:center">
+      <p class="section-label">The product</p>
+      <h2 class="section-heading">See it in <em>action.</em></h2>
+    </div>
+    <div class="preview-container reveal">
+      <div class="preview-grid">
+        <div class="preview-card" onclick="openLightbox(0)">
+          <div style="position:relative">
+            <img src="screenshot-matrix.png" alt="Distribution Lists Matrix" loading="lazy">
+            <div class="zoom-hint"><span>Click to expand</span></div>
+          </div>
+          <div class="preview-caption"><h4>Distribution Matrix</h4><p>See exactly who gets every document — and how.</p></div>
+        </div>
+        <div class="preview-card" onclick="openLightbox(1)">
+          <div style="position:relative">
+            <img src="screenshot-doc-structure.png" alt="Document Structure" loading="lazy">
+            <div class="zoom-hint"><span>Click to expand</span></div>
+          </div>
+          <div class="preview-caption"><h4>Document Structure</h4><p>Organize by phase: Core Deal, Financing, Employment.</p></div>
+        </div>
+        <div class="preview-card" onclick="openLightbox(2)">
+          <div style="position:relative">
+            <img src="screenshot-activity.png" alt="Activity & Audit Log" loading="lazy">
+            <div class="zoom-hint"><span>Click to expand</span></div>
+          </div>
+          <div class="preview-caption"><h4>Activity & Audit</h4><p>Full history. Every send, every warning, every change.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-inner" onclick="event.stopPropagation()">
+    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+    <button class="lightbox-nav lightbox-prev" onclick="navLightbox(-1)">&#8249;</button>
+    <button class="lightbox-nav lightbox-next" onclick="navLightbox(1)">&#8250;</button>
+    <img id="lb-img" src="" alt="">
+    <p class="lightbox-caption" id="lb-caption"></p>
+  </div>
+</div>
+
+<!-- SECURITY -->
+<section class="section section-cream" id="security">
+  <div class="container">
+    <div class="reveal"><p class="section-label">Security</p><h2 class="section-heading">Your data<br>stays <em>yours.</em></h2><p class="section-desc">Built with enterprise security from day one. SOC 2 Type II–ready architecture.</p></div>
+    <div class="security-grid reveal">
+      <div class="security-item"><h4>Role-based permissions</h4><p>Control who can view, edit, or send from each deal.</p></div>
+      <div class="security-item"><h4>Encryption in transit & at rest</h4><p>AES-256 for stored data. TLS for all connections.</p></div>
+      <div class="security-item"><h4>Complete audit logs</h4><p>Immutable record of every action, exportable for compliance.</p></div>
+      <div class="security-item"><h4>Least-privilege access</h4><p>Users see only the deals and data they're authorized for.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-white" id="faq">
+  <div class="container-narrow">
+    <div class="reveal"><p class="section-label">FAQ</p><h2 class="section-heading" style="margin-bottom:44px">Common<br><em>questions.</em></h2></div>
+    <div class="reveal" style="border-top:1px solid var(--warm-gray)">
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Does this replace Outlook?<span class="faq-icon">+</span></button><div class="faq-a"><p>No. Distro works inside Outlook and Gmail. It adds intelligence on top of your existing email — no migration required.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How does AI decide recipients?<span class="faq-icon">+</span></button><div class="faq-a"><p>You define deal roles and parties. Distro uses those roles plus document-type rules to generate a distribution matrix. You always have final approval before any send.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can we lock down who can edit lists?<span class="faq-icon">+</span></button><div class="faq-a"><p>Yes. Permissions are role-based. Restrict list editing to partners or designated leads, while associates send within pre-approved parameters.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How long does setup take?<span class="faq-icon">+</span></button><div class="faq-a"><p>A new deal can be configured in under 15 minutes. Firms with existing templates can launch a deal in seconds with one-click reuse.</p></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What practice areas?<span class="faq-icon">+</span></button><div class="faq-a"><p>Any transactional practice: M&A, capital markets, private equity, real estate, banking & finance. If a deal involves distributing documents to multiple parties, Distro handles it.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO CTA -->
+<section class="section section-dark" id="demo">
+  <div class="container" style="text-align:center">
+    <div class="reveal"><h2 class="section-heading">Get Distro for<br>your next <em>deal.</em></h2><p class="section-desc" style="max-width:380px;margin:0 auto">See how Distro eliminates distribution errors at your firm.</p></div>
+    <div class="form-wrapper reveal" id="form-container">
+      <form id="demo-form">
+        <div class="form-row"><input class="form-input" name="name" required placeholder="Your name"><input class="form-input" name="firm" required placeholder="Firm name" style="margin-bottom:0"></div>
+        <input class="form-input" name="email" type="email" required placeholder="Work email">
+        <select class="form-input" name="role" required id="role-select"><option value="" disabled selected>Your role</option><option value="partner">Partner</option><option value="associate">Associate</option><option value="paralegal">Paralegal / Legal Assistant</option><option value="legal-ops">Legal Operations</option><option value="it">IT / Technology</option><option value="other">Other</option></select>
+        <button type="submit" class="form-submit">Request a Demo</button>
+        <p class="form-fallback">Or email us at <a href="mailto:hello@distrocc.com">hello@distrocc.com</a></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer><div class="footer-inner"><span class="nav-logo" style="font-size:18px">Distro</span><p>&copy; 2025 DistroCC, Inc.</p></div></footer>
+
+<script>
+/* Nav */
+const nav = document.getElementById('nav');
+const hero = document.getElementById('hero');
+function updateNav() {
+  const y = window.scrollY;
+  nav.classList.toggle('scrolled', y > 40);
+  const heroBottom = hero.offsetTop + hero.offsetHeight - 100;
+  if (y > heroBottom) {
+    nav.classList.remove('on-hero');
+    nav.style.background = '';
+    nav.style.borderBottom = '';
+  } else {
+    nav.classList.add('on-hero');
+    if (y > 40) {
+      nav.style.background = 'rgba(12,12,12,0.7)';
+      nav.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+    } else {
+      nav.style.background = '';
+      nav.style.borderBottom = '';
+    }
+  }
+}
+window.addEventListener('scroll', updateNav, { passive: true });
+updateNav();
+
+/* Scroll reveal */
+const obs = new IntersectionObserver(
+  es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }),
+  { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* FAQ */
+function toggleFaq(b) {
+  const a = b.parentElement.querySelector('.faq-a');
+  const i = b.querySelector('.faq-icon');
+  const open = a.classList.contains('open');
+  document.querySelectorAll('.faq-a').forEach(x => x.classList.remove('open'));
+  document.querySelectorAll('.faq-icon').forEach(x => x.classList.remove('open'));
+  if (!open) { a.classList.add('open'); i.classList.add('open'); }
+}
+
+/* Lightbox */
+const lbImages = [
+  { src: 'screenshot-matrix.png', caption: 'Distribution Matrix' },
+  { src: 'screenshot-doc-structure.png', caption: 'Document Structure' },
+  { src: 'screenshot-activity.png', caption: 'Activity & Audit' },
+];
+let lbIndex = 0;
+const lb = document.getElementById('lightbox');
+const lbImg = document.getElementById('lb-img');
+const lbCap = document.getElementById('lb-caption');
+
+function openLightbox(idx) {
+  lbIndex = idx;
+  lbImg.src = lbImages[idx].src;
+  lbCap.textContent = lbImages[idx].caption;
+  lb.classList.add('active');
+  document.body.classList.add('lb-open');
+}
+function closeLightbox(e) {
+  if (e && e.target !== lb && e.type === 'click') return;
+  lb.classList.remove('active');
+  document.body.classList.remove('lb-open');
+}
+function navLightbox(dir) {
+  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
+  lbImg.src = lbImages[lbIndex].src;
+  lbCap.textContent = lbImages[lbIndex].caption;
+}
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (!lb.classList.contains('active')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navLightbox(-1);
+  if (e.key === 'ArrowRight') navLightbox(1);
+});
+
+/* Select styling */
+document.getElementById('role-select').addEventListener('change', function() {
+  this.classList.toggle('filled', this.value !== '');
+});
+
+/* Form */
+document.getElementById('demo-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const data = Object.fromEntries(new FormData(this));
+  console.log('Demo request:', data);
+  // TODO: Connect to real endpoint
+  const btn = this.querySelector('.form-submit');
+  btn.disabled = true; btn.textContent = 'Sending...';
+  await new Promise(r => setTimeout(r, 800));
+  document.getElementById('form-container').innerHTML =
+    '<div class="success-box"><h3>We\'ll be in touch.</h3><p>Expect to hear from us within 24 hours.</p></div>';
+});
+</script>
+</body>
+</html>
